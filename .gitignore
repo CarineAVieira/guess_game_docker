@@ -10,3 +10,10 @@ db/*
 bin/
 *.lock
 
+
+# Arquivos Docker do trabalho
+!Dockerfile.backend
+!Dockerfile.frontend
+!docker-compose.yml
+!nginx/
+!nginx/nginx.conf
