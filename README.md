@@ -142,11 +142,6 @@ Tente adivinhar
 
 
 
-## Melhorias Futuras
-
-- Implementar autenticação de usuário para salvar e carregar jogos.
-- Adicionar limite de tentativas.
-- Melhorar a interface de feedback para as tentativas de adivinhação.
 
 ## Licença
 
