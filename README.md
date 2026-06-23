@@ -1,6 +1,3 @@
-Aqui está um exemplo de um arquivo `README.md` para o seu jogo:
-
----
 
 # Jogo de Adivinhação com Flask
 
