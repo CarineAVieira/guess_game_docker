@@ -109,7 +109,7 @@ No diretorio de frontend
 
 ### 1. Criar um novo jogo
 
-Acesse a url do frontend http://localhost:3000
+Acesse a URL da aplicação: http://localhost:8080
 
 Digite uma frase secreta
 
@@ -120,7 +120,7 @@ Salve o game-id
 
 ### 2. Adivinhar a senha
 
-Acesse a url do frontend http://localhost:3000
+Acesse a url do frontend http://localhost:8080
 
 Vá para o endponint breaker
 
