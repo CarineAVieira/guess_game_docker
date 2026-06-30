@@ -1,149 +1,116 @@
 
-# Jogo de Adivinhação com Flask
+# Guess Game Docker
 
-Este é um simples jogo de adivinhação desenvolvido utilizando o framework Flask. O jogador deve adivinhar uma senha criada aleatoriamente, e o sistema fornecerá feedback sobre o número de letras corretas e suas respectivas posições.
+Aplicação do jogo de adivinhação desenvolvida em Flask e React, containerizada com Docker Compose.
+
+## Tecnologias
+
+- Python 3.12
+- Flask
+- React
+- PostgreSQL 16
+- NGINX
+- Docker
+- Docker Compose
+
+## Arquitetura
+
+A aplicação é composta pelos seguintes serviços:
+
+- **postgres**: banco de dados PostgreSQL;
+- **backend1**: primeira instância do backend Flask;
+- **backend2**: segunda instância do backend Flask;
+- **nginx**: servidor do frontend React e proxy reverso para o backend.
+
+## Estrutura do projeto
+
+```
+.
+├── frontend/
+├── nginx/
+├── Dockerfile.backend
+├── Dockerfile.frontend
+├── docker-compose.yml
+├── requirements.txt
+└── run.py
+```
+
+## Como executar
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/CarineAVieira/guess_game_docker.git
+cd guess_game_docker
+```
+
+Execute a aplicação:
+
+```bash
+docker compose up --build
+```
+
+Acesse:
+
+```
+http://localhost:8080
+```
+
+Para finalizar:
+
+```bash
+docker compose down
+```
+
+## Como jogar
+
+### Criar um novo jogo
+
+1. Acesse:
+
+```
+http://localhost:8080
+```
+
+2. Digite uma frase secreta.
+
+3. Clique em **Create**.
+
+4. Guarde o **Game ID** gerado.
+
+### Adivinhar a senha
+
+1. Acesse novamente:
+
+```
+http://localhost:8080
+```
+
+2. Vá para a tela **Breaker**.
+
+3. Informe o **Game ID**.
+
+4. Faça suas tentativas até descobrir a senha.
 
 ## Funcionalidades
 
-- Criação de um novo jogo com uma senha fornecida pelo usuário.
-- Adivinhe a senha e receba feedback se as letras estão corretas e/ou em posições corretas.
-- As senhas são armazenadas  utilizando base64.
-- As adivinhações incorretas retornam uma mensagem com dicas.
-  
-## Requisitos
+- criação de novos jogos;
+- armazenamento da senha em Base64;
+- comparação das tentativas;
+- retorno de dicas ao jogador;
+- persistência dos dados em PostgreSQL;
+- balanceamento entre duas instâncias do backend utilizando NGINX.
 
-- Python 3.8+ - 3.12
-- Flask
-- Um banco de dados local (ou um mecanismo de armazenamento configurado em `current_app.db`)
-- node 18.17.0
+## Serviços Docker
 
-## Instalação
+| Serviço | Porta |
+|----------|------:|
+| NGINX (Frontend) | 8080 |
+| Backend Flask | 5000 (interna) |
+| PostgreSQL | 5432 (interna) |
 
-1. Clone o repositório:
-
-   ```bash
-   git clone https://github.com/fams/guess_game.git
-   cd guess-game
-   ```
-
-2. Crie um ambiente virtual e ative-o:
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   venv\Scripts\activate  # Windows
-   ```
-
-3. Instale as dependências:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Configure o banco de dados com as variáveis de ambiente no arquivo start-backend.sh
-    1. Para sqlite
-
-        ```bash
-            export FLASK_APP="run.py"
-            export FLASK_DB_TYPE="sqlite"            # Use SQLITE
-            export FLASK_DB_PATH="caminho/db.sqlite" # caminho do banco
-        ```
-
-    2. Para Postgres
-
-        ```bash
-            export FLASK_APP="run.py"
-            export FLASK_DB_TYPE="postgres"       # Use postgres
-            export FLASK_DB_USER="postgres"       # Usuário do banco
-            export FLASK_DB_NAME="postgres"       # Nome do Banco
-            export FLASK_DB_PASSWORD="secretpass" # Senha do banco
-            export FLASK_DB_HOST="localhost"      # Hostname
-            export FLASK_DB_PORT="5432"           # Porta
-        ```
-
-    3. Para DynamoDB
-
-        ```bash
-        export FLASK_APP="run.py"
-        export FLASK_DB_TYPE="dynamodb"       # Use postgres
-        export AWS_DEFAULT_REGION="us-east-1" # AWS region
-        export AWS_ACCESS_KEY_ID="FAKEACCESSKEY123456" 
-        export AWS_SECRET_ACCESS_KEY="FakeSecretAccessKey987654321"
-        export AWS_SESSION_TOKEN="FakeSessionTokenABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
-        ```
-
-5. Execute o backend
-
-   ```bash
-   ./start-backend.sh &
-   ```
-
-6. Cuidado! verifique se o seu linux está lendo o arquivo .sh com fim de linha do windows CRLF. Para verificar utilize o vim -b start-backend.sh
-
-## Frontend
-No diretorio de frontend
-
-1. Instale o node com o nvm. Se não tiver o nvm instalado, siga o [tutorial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
-
-    ```bash
-    nvm install 18.17.0
-    nvm use 18.17.0
-    # Habilite o yarn
-    corepack enable
-    ```
-
-2. Instale as dependências do node com o npm:
-
-    ```bash
-    npm install
-    ```
-
-3. Exporte a url onde está executando o backend e execute o backend.
-
-   ```bash
-    export REACT_APP_BACKEND_URL=http://localhost:5000
-    yarn start
-   ```
-
-## Como Jogar
-
-### 1. Criar um novo jogo
-
-Acesse a URL da aplicação: http://localhost:8080
-
-Digite uma frase secreta
-
-Envie
-
-Salve o game-id
-
-
-### 2. Adivinhar a senha
-
-Acesse a url do frontend http://localhost:8080
-
-Vá para o endponint breaker
-
-entre com o game_id que foi gerado pelo Creator
-
-Tente adivinhar
-
-## Estrutura do Código
-
-### Rotas:
-
-- **`/create`**: Cria um novo jogo. Armazena a senha codificada em base64 e retorna um `game_id`.
-- **`/guess/<game_id>`**: Permite ao usuário adivinhar a senha. Compara a adivinhação com a senha armazenada e retorna o resultado.
-
-### Classes Importantes:
-
-- **`Guess`**: Classe responsável por gerenciar a lógica de comparação entre a senha e a tentativa do jogador.
-- **`WrongAttempt`**: Exceção personalizada que é levantada quando a tentativa está incorreta.
-
-
-
+O backend não é acessado diretamente pelo navegador. As requisições são encaminhadas pelo NGINX utilizando o endpoint `/api`.
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
-
+MIT License.
